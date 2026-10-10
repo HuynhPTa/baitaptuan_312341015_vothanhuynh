@@ -1,0 +1,13 @@
+@page
+@model AccessDeniedModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Không có quyền truy cập";
+}
+
+<div class="empty">
+    <div class="empty-icon">⛔</div>
+    <h1 class="h4 fw-bold">Bạn không có quyền truy cập trang này</h1>
+    <p>Tài khoản hiện tại không phải quản trị viên.</p>
+    <a class="btn-primary-lg" asp-page="/Index">Về trang chủ</a>
+</div>

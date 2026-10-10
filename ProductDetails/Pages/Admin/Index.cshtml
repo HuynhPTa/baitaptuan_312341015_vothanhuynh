@@ -1,0 +1,114 @@
+@page
+@model ProductDetails.Pages.Admin.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "TỔNG QUAN HỆ THỐNG";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-dark border-2">
+    <div>
+        <h2 class="text-uppercase fw-black mb-0 tracking-tight" style="font-weight: 900;">BẢNG ĐIỀU KHIỂN</h2>
+        <span class="text-muted small text-uppercase fw-semibold tracking-wider">HỆ THỐNG QUẢN LÝ TECHSTORE</span>
+    </div>
+    <a asp-page="/Admin/Products" class="btn btn-dark rounded-0 text-uppercase fw-bold px-3 py-2">
+        📦 QUẢN LÝ SẢN PHẨM
+    </a>
+</div>
+
+<!-- 4 Thẻ thống kê (Stats Cards) phong cách Adidas Minimalist -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="bg-light p-3 border-start border-4 border-dark h-100">
+            <div class="text-muted small text-uppercase fw-bold tracking-wider mb-1">TỔNG SẢN PHẨM</div>
+            <div class="fs-2 fw-black text-dark">@Model.TotalProducts</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="bg-light p-3 border-start border-4 border-dark h-100">
+            <div class="text-muted small text-uppercase fw-bold tracking-wider mb-1">TỔNG TỒN KHO</div>
+            <div class="fs-2 fw-black text-dark">@Model.TotalStock</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="bg-light p-3 border-start border-4 border-danger h-100">
+            <div class="text-danger small text-uppercase fw-bold tracking-wider mb-1">HẾT HÀNG</div>
+            <div class="fs-2 fw-black text-danger">@Model.OutOfStock</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="bg-light p-3 border-start border-4 border-dark h-100">
+            <div class="text-muted small text-uppercase fw-bold tracking-wider mb-1">GIÁ TRỊ TỒN KHO</div>
+            <div class="fs-3 fw-black text-dark">@Model.InventoryValue.ToString("N0") đ</div>
+        </div>
+    </div>
+</div>
+
+<!-- 5 Sản phẩm mới cập nhật gần đây -->
+<div class="border border-dark">
+    <div class="bg-black text-white p-3 d-flex justify-content-between align-items-center">
+        <span class="text-uppercase fw-bold tracking-wider small">SẢN PHẨM MỚI NHẤT</span>
+        <a asp-page="/Admin/Products" class="text-white text-decoration-none small text-uppercase fw-bold">XEM TẤT CẢ &rarr;</a>
+    </div>
+
+    <div class="table-responsive bg-white">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-uppercase small fw-bold">
+                <tr>
+                    <th style="width: 80px;">ẢNH</th>
+                    <th>TÊN SẢN PHẨM</th>
+                    <th>DANH MỤC</th>
+                    <th>GIÁ</th>
+                    <th>KHO</th>
+                    <th class="text-end" style="width: 140px;">HÀNH ĐỘNG</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Latest.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted small text-uppercase">Chưa có sản phẩm nào trong hệ thống.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model.Latest)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.Name" style="width: 44px; height: 44px; object-fit: cover;" class="border" />
+                                }
+                                else
+                                {
+                                    <span class="fs-4">@item.Emoji</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="fw-bold text-uppercase">@item.Name</div>
+                                <span class="small text-muted">Mã: #@item.Id</span>
+                            </td>
+                            <td><span class="badge bg-light text-dark border rounded-0 text-uppercase">@item.Category</span></td>
+                            <td class="fw-bold">@item.Price.ToString("N0") đ</td>
+                            <td>
+                                @if (item.Stock == 0)
+                                {
+                                    <span class="text-danger fw-bold small text-uppercase">HẾT HÀNG</span>
+                                }
+                                else
+                                {
+                                    <span class="fw-bold">@item.Stock</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-page="/Admin/Edit" asp-route-id="@item.Id" class="btn btn-outline-dark btn-sm rounded-0 text-uppercase fw-bold px-2 py-1">
+                                    SỬA
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

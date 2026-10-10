@@ -1,0 +1,100 @@
+@page "{id:int}"
+@model EditModel
+@{ ViewData["Title"] = "Sửa: " + Model.Product.Name; }
+
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <div>
+        <a asp-page="/Admin/Products" class="small">← Danh sách sản phẩm</a>
+        <h1 class="page-title mb-0">@Model.Product.Name</h1>
+    </div>
+    <a asp-page="/Details" asp-route-id="@Model.Product.Id" target="_blank" class="btn-ghost-lg">Xem trang khách ↗</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <form method="post" asp-page-handler="Save" asp-route-id="@Model.Product.Id"
+              enctype="multipart/form-data" class="cart-card p-4 row g-3">
+
+            <div class="col-md-8">
+                <label asp-for="Input.Name" class="form-label">Tên sản phẩm</label>
+                <input asp-for="Input.Name" class="form-control" />
+                <span asp-validation-for="Input.Name" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Input.Brand" class="form-label">Thương hiệu</label>
+                <input asp-for="Input.Brand" class="form-control" />
+                <span asp-validation-for="Input.Brand" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Input.Category" class="form-label">Danh mục</label>
+                <input asp-for="Input.Category" class="form-control" />
+                <span asp-validation-for="Input.Category" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Input.Price" class="form-label">Giá (₫)</label>
+                <input asp-for="Input.Price" type="number" min="0" step="1000" class="form-control" />
+                <span asp-validation-for="Input.Price" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Input.Stock" class="form-label">Tồn kho</label>
+                <input asp-for="Input.Stock" type="number" min="0" class="form-control" />
+                <span asp-validation-for="Input.Stock" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Input.ShortDescription" class="form-label">Mô tả ngắn</label>
+                <input asp-for="Input.ShortDescription" class="form-control" />
+            </div>
+            <div class="col-12">
+                <label asp-for="Input.Description" class="form-label">Mô tả chi tiết</label>
+                <textarea asp-for="Input.Description" rows="4" class="form-control"></textarea>
+            </div>
+            <div class="col-12">
+                <label asp-for="Input.Specs" class="form-label">Thông số kỹ thuật (mỗi dòng: Tên: Giá trị)</label>
+                <textarea asp-for="Input.Specs" rows="5" class="form-control"></textarea>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Ảnh sản phẩm</label>
+                @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
+                {
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <img src="@Model.Product.ImageUrl" alt="" style="width:90px;height:90px;object-fit:cover;border-radius:12px" />
+                        <div class="form-check">
+                            <input asp-for="Input.RemoveImage" class="form-check-input" />
+                            <label asp-for="Input.RemoveImage" class="form-check-label">Xóa ảnh hiện tại</label>
+                        </div>
+                    </div>
+                }
+                <input asp-for="Input.Image" type="file" accept="image/*" class="form-control" />
+                <div class="form-text">Chọn ảnh mới sẽ thay ảnh cũ (tối đa 2MB).</div>
+                <span asp-validation-for="Input.Image" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn-primary-lg">Lưu thay đổi</button>
+                <a asp-page="/Admin/Products" class="btn-ghost-lg">Hủy</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-4 d-grid gap-4 align-content-start">
+        <div class="cart-card p-4">
+            <h2 class="h6 fw-bold">Tồn kho hiện tại</h2>
+            <div class="display-6 fw-bold mb-3">@Model.Product.Stock</div>
+            <form method="post" asp-page-handler="AddStock" asp-route-id="@Model.Product.Id" class="d-flex gap-2">
+                <input type="number" name="amount" value="1" class="form-control" />
+                <button type="submit" class="btn btn-success text-nowrap">Cập nhật</button>
+            </form>
+            <div class="form-text">Số dương = nhập thêm, số âm = giảm bớt.</div>
+        </div>
+
+        <div class="cart-card p-4">
+            <h2 class="h6 fw-bold text-danger">Xóa sản phẩm</h2>
+            <p class="small text-muted">Xóa luôn ảnh đã upload, không thể hoàn tác.</p>
+            <form method="post" asp-page-handler="Delete" asp-route-id="@Model.Product.Id"
+                  onsubmit="return confirm('Xóa sản phẩm này?');">
+                <button type="submit" class="btn btn-outline-danger w-100">Xóa sản phẩm</button>
+            </form>
+        </div>
+    </div>
+</div>

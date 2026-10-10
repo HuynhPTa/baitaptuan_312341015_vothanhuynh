@@ -1,0 +1,81 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "TRANG CHỦ - ADIDAS VIỆT NAM";
+}
+
+<!-- Hero Banner phong cách Sportswear -->
+<section class="mb-5 position-relative bg-dark text-white p-4 p-md-5 overflow-hidden">
+    <div class="row align-items-center position-relative" style="z-index: 2;">
+        <div class="col-lg-7">
+            <span class="badge bg-white text-dark rounded-0 text-uppercase fw-bold mb-3 px-3 py-2 tracking-wider">
+                BỘ SƯU TẬP MỚI
+            </span>
+            <h1 class="display-4 fw-black text-uppercase tracking-tight mb-3" style="font-weight: 900; letter-spacing: -0.03em;">
+                KHẲNG ĐỊNH PHONG CÁCH CỦA BẠN
+            </h1>
+            <p class="lead text-white-50 mb-4" style="max-width: 540px;">
+                Khám phá các dòng sản phẩm giày thể thao, phụ kiện và trang phục tập luyện với công nghệ đỉnh cao.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="#filter-form" class="btn btn-light rounded-0 text-uppercase fw-bold px-4 py-3 tracking-wider">
+                    XEM NGAY
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bộ lọc tìm kiếm & Danh mục -->
+<section class="mb-4">
+    <form id="filter-form" method="get" class="row g-2 align-items-center">
+        <!-- Ô gõ tìm kiếm: đặt đúng name="Keyword" để khớp với IndexModel -->
+        <div class="col-md-5 col-lg-6">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-dark rounded-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </span>
+                <input type="text" 
+                       name="Keyword" 
+                       value="@Model.Keyword" 
+                       class="form-control rounded-0 border-dark border-start-0 text-uppercase tracking-wide" 
+                       placeholder="TÌM KIẾM SẢN PHẨM..." 
+                       autocomplete="off" />
+            </div>
+        </div>
+
+        <!-- Dropdown chọn danh mục -->
+        <div class="col-6 col-md-4 col-lg-4">
+            <select name="Category" class="form-select rounded-0 border-dark text-uppercase tracking-wider">
+                <option value="">TẤT CẢ DANH MỤC</option>
+                @if (Model.Categories != null)
+                {
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <!option value="@cat" @(string.Equals(Model.Category, cat, StringComparison.OrdinalIgnoreCase) ? "selected" : "")>
+                            @cat.ToUpper()
+                        </!option>
+                    }
+                }
+            </select>
+        </div>
+
+        <!-- Nút Reset -->
+        <div class="col-6 col-md-3 col-lg-2 d-flex gap-1">
+            <button type="submit" class="btn btn-dark w-100 rounded-0 text-uppercase fw-bold tracking-wider py-2">
+                LỌC
+            </button>
+            <button type="button" data-reset class="btn btn-outline-dark rounded-0 px-3 py-2" title="Xóa bộ lọc">
+                ✕
+            </button>
+        </div>
+    </form>
+</section>
+
+<!-- Thẻ bao bọc chứa danh sách sản phẩm để JavaScript hoán đổi nội dung khi lọc -->
+<section id="product-grid" class="py-2">
+    @await Html.PartialAsync("_ProductGrid", Model.Products)
+</section>

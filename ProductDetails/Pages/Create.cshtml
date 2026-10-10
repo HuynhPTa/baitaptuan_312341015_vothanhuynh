@@ -1,0 +1,73 @@
+@page
+@model CreateModel
+@{ ViewData["Title"] = "Thêm sản phẩm"; }
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/Index">Sản phẩm</a></li>
+        <li class="breadcrumb-item active">Thêm sản phẩm</li>
+    </ol>
+</nav>
+
+<h1 class="h3 mb-4">Thêm sản phẩm mới</h1>
+
+<form method="post" enctype="multipart/form-data" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="col-md-8">
+        <label asp-for="Input.Name" class="form-label">Tên sản phẩm</label>
+        <input asp-for="Input.Name" class="form-control" />
+        <span asp-validation-for="Input.Name" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Input.Brand" class="form-label">Thương hiệu</label>
+        <input asp-for="Input.Brand" class="form-control" />
+        <span asp-validation-for="Input.Brand" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Input.Category" class="form-label">Danh mục</label>
+        <input asp-for="Input.Category" class="form-control" placeholder="Laptop, Điện thoại..." />
+        <span asp-validation-for="Input.Category" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Input.Price" class="form-label">Giá (₫)</label>
+        <input asp-for="Input.Price" type="number" min="0" step="1000" class="form-control" />
+        <span asp-validation-for="Input.Price" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Input.Stock" class="form-label">Tồn kho</label>
+        <input asp-for="Input.Stock" type="number" min="0" class="form-control" />
+        <span asp-validation-for="Input.Stock" class="text-danger small"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Input.ShortDescription" class="form-label">Mô tả ngắn</label>
+        <input asp-for="Input.ShortDescription" class="form-control" />
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Input.Description" class="form-label">Mô tả chi tiết</label>
+        <textarea asp-for="Input.Description" rows="4" class="form-control"></textarea>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Input.Specs" class="form-label">Thông số kỹ thuật</label>
+        <textarea asp-for="Input.Specs" rows="5" class="form-control"
+                  placeholder="Mỗi dòng một thông số, ví dụ:&#10;CPU: Intel Core i7&#10;RAM: 16GB"></textarea>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Input.Image" class="form-label">Ảnh sản phẩm (tối đa 2MB)</label>
+        <input asp-for="Input.Image" type="file" accept="image/*" class="form-control" />
+        <span asp-validation-for="Input.Image" class="text-danger small"></span>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+        <a asp-page="/Index" class="btn btn-outline-secondary">Hủy</a>
+    </div>
+</form>

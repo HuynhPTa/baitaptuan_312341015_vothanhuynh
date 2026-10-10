@@ -1,0 +1,48 @@
+@page
+@model ProductsModel
+@{ ViewData["Title"] = "Quản lý sản phẩm"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="page-title mb-0">Quản lý sản phẩm</h1>
+    <a asp-page="/Create" class="btn-primary-lg">+ Thêm sản phẩm</a>
+</div>
+
+<div class="cart-card p-3">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>#</th><th>Sản phẩm</th><th>Danh mục</th><th class="text-end">Giá</th><th class="text-end">Tồn</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Products)
+                {
+                    <tr>
+                        <td class="text-muted">@p.Id</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="admin-thumb">
+                                    @if (!string.IsNullOrEmpty(p.ImageUrl)) { <img src="@p.ImageUrl" alt="" /> } else { @p.Emoji }
+                                </span>
+<a asp-page="/Admin/Edit" asp-route-id="@p.Id">@p.Name</a>
+                            </div>
+                        </td>
+                        <td>@p.Category</td>
+                        <td class="text-end">@p.Price.Vnd()</td>
+                        <td class="text-end">
+                            @if (p.Stock == 0) { <span class="badge text-bg-danger">Hết</span> } else { @p.Stock }
+                        </td>
+                        <td class="text-end">
+    <div class="d-flex justify-content-end gap-1">
+        <a asp-page="/Admin/Edit" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary">Sửa</a>
+        <form method="post" asp-page-handler="Delete" asp-route-id="@p.Id"
+              onsubmit="return confirm('Xóa sản phẩm này?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
+        </form>
+    </div>
+</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

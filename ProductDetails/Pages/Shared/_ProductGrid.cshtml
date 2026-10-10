@@ -1,0 +1,83 @@
+@model List<Product>
+
+<div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-dark border-2">
+    <div class="text-uppercase fw-bold fs-5 tracking-wide">
+        TẤT CẢ SẢN PHẨM <span class="text-muted fw-normal fs-6">(@Model.Count)</span>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="text-center py-5 bg-light my-4">
+        <h4 class="text-uppercase fw-bold">KHÔNG TÌM THẤY SẢN PHẨM</h4>
+        <p class="text-secondary small mb-0">Hãy thử đổi từ khóa tìm kiếm hoặc chọn danh mục khác.</p>
+    </div>
+}
+else
+{
+    <div class="row g-3 g-md-4">
+        @foreach (var p in Model)
+        {
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="adidas-card h-100 d-flex flex-column border-0 position-relative">
+                    <!-- Khung ảnh -->
+                    <div class="adidas-media position-relative overflow-hidden bg-light" style="aspect-ratio: 1/1;">
+                        <a asp-page="/Details" asp-route-id="@p.Id" class="d-flex align-items-center justify-content-center h-100 text-decoration-none text-dark">
+                            @if (!string.IsNullOrEmpty(p.ImageUrl))
+                            {
+                                <img src="@p.ImageUrl" alt="@p.Name" class="img-fluid w-100 h-100 object-fit-cover adidas-img" loading="lazy" />
+                            }
+                            else
+                            {
+                                <span class="display-4">@p.Emoji</span>
+                            }
+                        </a>
+
+                        @if (p.Stock == 0)
+                        {
+                            <span class="position-absolute bottom-0 start-0 bg-dark text-white text-uppercase px-2 py-1 small fw-bold tracking-tight">
+                                Hết hàng
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="position-absolute bottom-0 start-0 bg-white text-dark text-uppercase px-2 py-1 small fw-bold border border-dark border-bottom-0 border-start-0">
+                                @p.Price.Vnd()
+                            </span>
+                        }
+                    </div>
+
+                    <!-- Nội dung -->
+                    <div class="adidas-info pt-3 pb-2 d-flex flex-column flex-grow-1">
+                        <div class="text-muted small text-uppercase fw-semibold tracking-wider mb-1" style="font-size: 0.75rem;">
+                            @p.Category @(!string.IsNullOrEmpty(p.Brand) ? $"· {p.Brand}" : "")
+                        </div>
+                        <h4 class="h6 mb-1 text-uppercase fw-bold text-truncate-2">
+                            <a asp-page="/Details" asp-route-id="@p.Id" class="text-dark text-decoration-none adidas-link">
+                                @p.Name
+                            </a>
+                        </h4>
+                        @if (!string.IsNullOrEmpty(p.ShortDescription))
+                        {
+                            <p class="text-secondary small text-truncate mb-3" style="font-size: 0.8rem;">
+                                @p.ShortDescription
+                            </p>
+                        }
+
+                        <!-- Form thêm giỏ hàng Ajax -->
+                        <div class="mt-auto pt-2">
+                            <form method="post" asp-page="/Cart" asp-page-handler="Add" asp-route-id="@p.Id" class="js-add">
+                                <button type="submit" 
+                                        class="btn btn-dark w-100 rounded-0 text-uppercase fw-bold py-2 adidas-btn-add d-flex align-items-center justify-content-center gap-2"
+                                        disabled="@(p.Stock == 0)">
+                                    <span>@(p.Stock == 0 ? "Hết hàng" : "Thêm vào giỏ")</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

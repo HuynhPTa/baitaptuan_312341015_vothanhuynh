@@ -1,0 +1,112 @@
+@page "{id:int}"
+@model DetailsModel
+@{
+    ViewData["Title"] = Model.Product.Name.ToUpper() + " - ADIDAS";
+}
+
+<div class="container py-3">
+    <!-- Breadcrumb tối giản -->
+    <nav class="mb-4 small text-uppercase fw-semibold tracking-wider">
+        <a asp-page="/Index" class="text-secondary text-decoration-none">TRANG CHỦ</a>
+        <span class="text-muted mx-2">/</span>
+        <span class="text-secondary">@Model.Product.Category</span>
+        <span class="text-muted mx-2">/</span>
+        <span class="text-dark">@Model.Product.Name</span>
+    </nav>
+
+    <div class="row g-4 g-lg-5">
+        <!-- Khung ảnh lớn bên trái -->
+        <div class="col-lg-7">
+            <div class="bg-light d-flex align-items-center justify-content-center p-4 border border-1 border-light" style="min-height: 480px;">
+                @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
+                {
+                    <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" class="img-fluid w-100 object-fit-contain" style="max-height: 520px;" />
+                }
+                else
+                {
+                    <span class="display-1">@Model.Product.Emoji</span>
+                }
+            </div>
+        </div>
+
+        <!-- Thông tin mua hàng bên phải -->
+        <div class="col-lg-5 d-flex flex-column">
+            <!-- Brand & Category -->
+            <div class="text-uppercase text-secondary small fw-bold tracking-wider mb-2">
+                @Model.Product.Category @(!string.IsNullOrEmpty(Model.Product.Brand) ? $"· {Model.Product.Brand}" : "")
+            </div>
+
+            <!-- Tên sản phẩm -->
+            <h1 class="h2 fw-black text-uppercase tracking-tight mb-2" style="font-weight: 900;">
+                @Model.Product.Name
+            </h1>
+
+            <!-- Giá -->
+            <div class="fs-4 fw-bold mb-4 text-dark">
+                @Model.Product.Price.Vnd()
+            </div>
+
+            <!-- Trạng thái kho hàng -->
+            <div class="mb-4">
+                @if (Model.Product.Stock > 0)
+                {
+                    <span class="badge bg-success-subtle text-success border border-success rounded-0 text-uppercase tracking-wider px-2 py-1">
+                        ✓ Còn hàng (@Model.Product.Stock sản phẩm)
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger-subtle text-danger border border-danger rounded-0 text-uppercase tracking-wider px-2 py-1">
+                        ✕ Hết hàng
+                    </span>
+                }
+            </div>
+
+            <!-- Mô tả ngắn -->
+            @if (!string.IsNullOrEmpty(Model.Product.ShortDescription))
+            {
+                <p class="text-secondary mb-4">
+                    @Model.Product.ShortDescription
+                </p>
+            }
+
+            <!-- Nút Mua / Thêm vào giỏ -->
+            <form method="post" asp-page="/Cart" asp-page-handler="Add" asp-route-id="@Model.Product.Id" class="mb-4">
+                <button type="submit" 
+                        class="btn btn-black w-100 rounded-0 text-uppercase fw-bold py-3 text-white bg-black d-flex justify-content-between align-items-center px-4 tracking-wider"
+                        disabled="@(Model.Product.Stock == 0)">
+                    <span>@(Model.Product.Stock == 0 ? "HẾT HÀNG TẠM THỜI" : "THÊM VÀO GIỎ HÀNG")</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </form>
+
+            <!-- Thông số / Đặc tính kỹ thuật (Specs) -->
+            @if (Model.Product.Specs != null && Model.Product.Specs.Any())
+            {
+                <div class="border-top border-dark border-1 pt-3 mt-2">
+                    <h6 class="text-uppercase fw-bold tracking-wider mb-3">CHI TIẾT & THÔNG SỐ</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        @foreach (var spec in Model.Product.Specs)
+                        {
+                            <li class="d-flex justify-content-between border-bottom pb-1">
+                                <span class="text-secondary">@spec.Key</span>
+                                <span class="fw-semibold text-dark">@spec.Value</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- Mô tả chi tiết -->
+            @if (!string.IsNullOrEmpty(Model.Product.Description))
+            {
+                <div class="border-top border-dark border-1 pt-3 mt-3">
+                    <h6 class="text-uppercase fw-bold tracking-wider mb-2">MÔ TẢ SẢN PHẨM</h6>
+                    <div class="text-secondary small" style="white-space: pre-line;">
+                        @Model.Product.Description
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
